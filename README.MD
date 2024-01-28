@@ -47,7 +47,7 @@ The data analysis for this project was completed using R. This folder includes t
 Spotify_API - Python scripts and environment
 Folder contains the python script I wrote to attempt to add all songs streamed for a given year. 
 
-## Final Remarks 
+
 
 
 

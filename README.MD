@@ -39,13 +39,13 @@ You will be asked to log in to your Spotify account, once you log in you can sel
 ## Folder Contents 
 
 Data - Processed Data 
-Processed data includes the .csv files for my top 100 songs each year, and .csv files for the total streaming history for each year 
+Processed data includes the .csv files for my top 100 songs each year, and .csv files for the total streaming history for each year. The Analysis folder for this project includes an R markdown file and R scripts used to wrangle the data. This directory also includes the final report I wrote for my Data Visualization class, which examines how my music taste has changed over time. 
 
-Data Analysis - R Markdown Script/PDF, Final Report  
-The data analysis for this project was completed using R. This folder includes the final report I wrote for my Data Visualization class, which examines how my music taste has changed over time. 
+API - Python scripts 
+Folder contains the python script I wrote to attempt to add all songs streamed for a given year into a single playlist (this was unsuccessful) 
 
-Spotify_API - Python scripts and environment
-Folder contains the python script I wrote to attempt to add all songs streamed for a given year. 
+SQL - Databases 
+This folder contains the SQLite database that houses the streaming history for each year and a table of all years combined. I also saved queries for this database, and I plan on adding to this folder as I learn more SQL. 
 
 
 

@@ -1,0 +1,316 @@
+---
+title: "Data_Vis_Prj"
+output: pdf_document
+date: "2023-12-03"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Data Visualization Final Project: Music Taste Analysis 2023
+
+This data set includes a multitude of variables for my most played songs 
+on Spotify for 2023. 
+
+```{r, warning=FALSE}
+library(data.table)
+library(dplyr)
+library(tidyverse)
+library(sjmisc)
+library(stringr)
+
+# Listening data for the past 7 years 
+
+readRenviron('/Users/alarahector/Desktop/Fall 2023/Music Analysis /Listeninghistory.R')
+
+# Top 100 songs imported csv
+
+top2015 <- fread('/Users/alarahector/Desktop/Fall 2023/Music Analysis /2015.csv', check.names = TRUE)
+top2016 <- fread('/Users/alarahector/Desktop/Fall 2023/Music Analysis /2016.csv', check.names = TRUE)
+top2017 <- fread('/Users/alarahector/Desktop/Fall 2023/Music Analysis /2017.csv', check.names = TRUE)
+top2018 <- fread('/Users/alarahector/Desktop/Fall 2023/Music Analysis /2018.csv', check.names = TRUE)
+top2019 <- fread('/Users/alarahector/Desktop/Fall 2023/Music Analysis /2019.csv', check.names = TRUE)
+top2020 <- fread('/Users/alarahector/Desktop/Fall 2023/Music Analysis /2020.csv', check.names = TRUE)
+top2021 <- fread('/Users/alarahector/Desktop/Fall 2023/Music Analysis /2021.csv', check.names = TRUE)
+top2022 <- fread('/Users/alarahector/Desktop/Fall 2023/Music Analysis /2022.csv', check.names = TRUE)
+top2023 <- fread('/Users/alarahector/Desktop/Fall 2023/Music Analysis /2023.csv', check.names = TRUE)
+
+# General Data 
+
+topalltime <- fread('/Users/alarahector/Desktop/Fall 2023/Music Analysis /data.csv', check.names = TRUE)
+# --------------------------------------------------------------------------------
+# Selecting Relevant Columns
+
+top2015 <-subset(top2015, select = c(Track.Name, Album.Name, Artist.Name.s., Duration..ms.,
+                                     Popularity, Genres, Danceability, Energy, Key, Loudness, Tempo))
+top2016 <-subset(top2016, select = c(Track.Name, Album.Name, Artist.Name.s., Duration..ms.,
+                                     Popularity, Genres, Danceability, Energy, Key, Loudness, Tempo))
+top2017 <-subset(top2017, select = c(Track.Name, Album.Name, Artist.Name.s., Duration..ms.,
+                                     Popularity, Genres, Danceability, Energy, Key, Loudness, Tempo))
+top2018 <-subset(top2018, select = c(Track.Name, Album.Name, Artist.Name.s., Duration..ms.,
+                                     Popularity, Genres, Danceability, Energy, Key, Loudness, Tempo))
+top2019 <-subset(top2019, select = c(Track.Name, Album.Name, Artist.Name.s., Duration..ms.,
+                                     Popularity, Genres, Danceability, Energy, Key, Loudness, Tempo))
+top2020 <-subset(top2020, select = c(Track.Name, Album.Name, Artist.Name.s., Duration..ms.,
+                                     Popularity, Genres, Danceability, Energy, Key, Loudness, Tempo))
+top2021 <-subset(top2021, select = c(Track.Name, Album.Name, Artist.Name.s., Duration..ms.,
+                                     Popularity, Genres, Danceability, Energy, Key, Loudness, Tempo))
+top2022 <-subset(top2022, select = c(Track.Name, Album.Name, Artist.Name.s., Duration..ms.,
+                                     Popularity, Genres, Danceability, Energy, Key, Loudness, Tempo))
+top2023 <-subset(top2023, select = c(Track.Name, Album.Name, Artist.Name.s., Duration..ms.,
+                                     Popularity, Genres, Danceability, Energy, Key, Loudness, Tempo))
+
+topalltime <-subset(topalltime, select = c(artists, name, danceability, energy, loudness, popularity, tempo, year))
+
+topalltime <- topalltime %>% filter(year > 2014)
+
+# -------------------------------------------------------------------------------
+# Summary of Years 
+
+summary.unique <- data.frame(year=c(2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023),
+                 artists=c(915, 895, 1029, 1148, 1280, 1528, 1278, 760, 1109),
+                 albums=c(1411, 1432, 1579, 1783, 2112, 2240, 1904, 1112, 1739),
+                 tracks=c(3096, 2886, 4439, 3867, 4418, 3918, 3802, 2941, 4023),
+                 genres=c(17, 23, 28, 26, 30, 26, 27, 30, 31))
+
+# ------------------------------------------------------------------------------
+top2015 <- top2015 %>% 
+  mutate(Year = 2015) %>% 
+  mutate(Genres = str_split_i(Genres, ",", 1)) 
+
+top2016 <- top2016 %>% 
+  mutate(Year = 2016) %>% 
+  mutate(Genres = str_split_i(Genres, ",", 1))
+
+top2017 <- top2017 %>% 
+  mutate(Year = 2017) %>% 
+  mutate(Genres = str_split_i(Genres, ",", 1))
+
+top2018 <- top2018 %>% 
+  mutate(Year = 2018) %>% 
+  mutate(Genres = str_split_i(Genres, ",", 1))
+
+top2019 <- top2019 %>% 
+  mutate(Year = 2019) %>% 
+  mutate(Genres = str_split_i(Genres, ",", 1))
+
+top2020 <- top2020 %>% 
+  mutate(Year = 2020) %>% 
+  mutate(Genres = str_split_i(Genres, ",", 1))
+
+top2021 <- top2021 %>% 
+  mutate(Year = 2021) %>% 
+  mutate(Genres = str_split_i(Genres, ",", 1))
+
+top2022 <- top2022 %>% 
+  mutate(Year = 2022) %>% 
+  mutate(Genres = str_split_i(Genres, ",", 1))
+
+top2023 <- top2023 %>% 
+  mutate(Year = 2023) %>% 
+  mutate(Genres = str_split_i(Genres, ",", 1))
+
+topfull = rbind(top2015, top2016, top2017, top2018, top2019, top2020, top2021, top2022)
+
+
+```
+
+## Diversity of Music Taste over the Years (2015 - 2023)
+
+```{r}
+library(ggplot2)
+library(grid)
+library(gridExtra)
+
+w <- ggplot(summary.unique, aes(x = year, 
+                           y = genres)) + 
+  geom_point(color = "green") + 
+  geom_line(aes(x = year, y = genres), color = "green") + 
+  theme_classic() + labs(y = "Number of Genres", title = "Unique Genres") + 
+  scale_x_continuous(name = "Years", 
+                     breaks = c(2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023))
+
+x <- ggplot(summary.unique, aes(x = year, 
+                           y = tracks)) + 
+  geom_point(color = "green") + 
+  geom_line(aes(x = year, y = tracks), color = "green") + 
+  theme_classic() + labs(y = "Number of Tracks", title = "Unique Songs") + 
+  scale_x_continuous(name = "Years", 
+                     breaks = c(2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023))
+
+y <- ggplot(summary.unique, aes(x = year, 
+                           y = artists)) + 
+  geom_point(color = "green") + 
+  geom_line(aes(x = year, y = artists), color = "green") + 
+  theme_classic() + labs(y = "Number of Artists", title = "Unique Artists") + 
+  scale_x_continuous(name = "Years", 
+                     breaks = c(2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023))
+
+z <- ggplot(summary.unique, aes(x = year, 
+                           y = albums)) + 
+  geom_point(color = "green") + 
+  geom_line(aes(x = year, y = albums), color = "green") + 
+  theme_classic() + labs(y = "Number of Albums", title = "Unique Albums") + 
+  scale_x_continuous(name = "Years", 
+                     breaks = c(2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023))
+
+grid.arrange(w, x, y, z, ncol = 2, top= "Diversity of Music Taste 2015-2023")
+
+```
+
+
+## Characterizing Music Taste By Year 
+
+Descriptive Variables: Popularity, Danceability, Energy, Loudness, Temp Year by Year 
+
+```{r}
+library(ggplot2)
+library(grid)
+library(gridExtra)
+library(corrplot)
+
+# Correlation Plot of the Different Variables 
+cormat = cor(topfull[,-c(1, 2, 3, 6)])
+#corrplot(cormat)
+
+# Scatter Plot by Year Danceability and Popularity
+ 
+
+# Histogram 
+ggplot(top2015) +
+    geom_histogram(aes(x = Popularity,
+                       y = after_stat(count)),
+                       fill = "green",
+                       color = "black") + theme_classic () + labs(x = "Popularity", y = "Count", 
+                                                                  title="Popularity Count of My Top 2015 Songs")
+# Box and Scatter Plots by Year 
+
+library(ggforce)
+ggplot(topfull, aes(x = factor(Year), y = Energy)) + geom_sina(color = "green", size = 1.5)+ theme_classic() + geom_boxplot(alpha=0, color = "green", width = 0.7) + labs(x = "Year", title="Distribution of Energy in My Top Songs 2015-2023")
+
+ggplot(topfull, aes(x = factor(Year), y = Popularity)) + geom_sina(color = "red", size = 1.5)+ theme_classic() + geom_boxplot(alpha=0, color = "red", width = 0.7) + labs(x = "Year", title="Distribution of Popularity in My Top Songs 2015-2023")
+
+ggplot(topfull, aes(x = factor(Year), y = Danceability)) + geom_sina(color = "blue", size = 1.5)+ theme_classic() + geom_boxplot(alpha=0, color = "blue", width = 0.7) + labs(x = "Year", title="Distribution of Danceability in My Top Songs 2015-2023")
+
+ggplot(topfull, aes(x = factor(Year), y = Loudness)) + geom_sina(color = "orange", size = 1.5)+ theme_classic() + geom_boxplot(alpha=0, color = "orange", width = 0.7) + labs(x = "Year", title="Distribution of Loudness in My Top Songs 2015-2023")
+
+
+```
+
+## Distribution 
+
+```{r}
+library(ggplot2)
+
+a <- ggplot(top2015,
+aes(x = Genres))+
+geom_bar(fill = "gold")+ theme_minimal() + coord_flip() + 
+  labs(title = "Distribution of Genre in 2015")
+
+b <- ggplot(top2016,
+aes(x = Genres))+
+geom_bar(fill = "orange")+ theme_minimal() + coord_flip() +
+  labs(title = "Distribution of Genre in 2016")
+
+c <- ggplot(top2017,
+aes(x = Genres))+
+geom_bar(fill = "red")+ theme_minimal() + coord_flip() +
+  labs(title = "Distribution of Genre in 2017")
+
+d <- ggplot(top2018,
+aes(x = Genres))+
+geom_bar(fill = "magenta")+ theme_minimal() + coord_flip() + 
+  labs(title = "Distribution of Genre in 2018")
+
+e <- ggplot(top2019,
+aes(x = Genres))+
+geom_bar(fill = "purple")+ theme_minimal() + coord_flip() +
+  labs(title = "Distribution of Genre in 2019")
+
+f <- ggplot(top2020,
+aes(x = Genres))+
+geom_bar(fill = "darkblue")+ theme_minimal() + coord_flip() + 
+  labs(title = "Distribution of Genre in 2020")
+
+g <- ggplot(top2021,
+aes(x = Genres))+
+geom_bar(fill = "blue")+ theme_minimal() + coord_flip() +
+  labs(title = "Distribution of Genre in 2021")
+
+h <- ggplot(top2022,
+aes(x = Genres))+
+geom_bar(fill = "turquoise")+ theme_minimal() + coord_flip() +
+  labs(title = "Distribution of Genre in 2022")
+
+i <- ggplot(top2023,
+aes(x = Genres))+
+geom_bar(fill = "green")+ theme_minimal() + coord_flip() + 
+  labs(title = "Distribution of Genre in 2023")
+
+i
+
+```
+
+## Comparison 
+
+```{r}
+library(ggplot2)
+
+# Popularity 
+pop_den_me <- ggplot(topfull,
+       aes(x = Popularity,
+color = factor(Year)))+ geom_density(alpha = 0.4)+
+  theme_light() + labs(title = "My Top Songs", color = "Year")
+
+pop_den_all <- ggplot(topalltime,
+       aes(x = popularity,
+color = factor(year)))+ geom_density(alpha = 0.4)+
+  theme_light() + labs(title = "Songs on Spotify", color = "Year")
+
+grid.arrange(pop_den_me, pop_den_all, ncol = 1, top= "Density of Popularity in Songs")
+
+# Energy 
+
+en_me <- ggplot(topfull,
+       aes(x = Energy,
+color = factor(Year)))+ geom_density(alpha = 0.4)+
+  theme_light() + labs(title = "My Top Songs", color = "Year")
+
+en_all <- ggplot(topalltime,
+       aes(x = energy,
+color = factor(year)))+ geom_density(alpha = 0.4)+
+  theme_light() + labs(title = "Songs on Spotify", color = "Year")
+
+grid.arrange(en_me, en_all, ncol = 1, top= "Density of Energy in Songs")
+
+# Danceability
+
+d_me <- ggplot(topfull,
+       aes(x = Danceability,
+color = factor(Year)))+ geom_density(alpha = 0.4)+
+  theme_light() + labs(title = "My Top Songs", color = "Year")
+
+d_all <- ggplot(topalltime,
+       aes(x = danceability,
+color = factor(year)))+ geom_density(alpha = 0.4)+
+  theme_light() + labs(title = "Songs on Spotify", color = "Year")
+
+grid.arrange(d_me, d_all, ncol = 1, top= "Density of Danceable Songs")
+
+# Loudness
+
+l_me <- ggplot(topfull,
+       aes(x = Loudness,
+color = factor(Year)))+ geom_density(alpha = 0.4)+
+  theme_light() + labs(title = "My Top Songs", color = "Year")
+
+l_all <- ggplot(topalltime,
+       aes(x = loudness,
+color = factor(year)))+ geom_density(alpha = 0.4)+
+  theme_light() + labs(title = "Songs on Spotify", color = "Year")
+
+grid.arrange(l_me, l_all, ncol = 1, top= "Density of Loudness in Songs")
+
+```
+
